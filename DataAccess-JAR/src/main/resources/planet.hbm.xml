@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="za.co.discovery.assignment.entity.Planet" table="PLANET">
+      <meta attribute="class-description">
+         This class contains the planet detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="planetNode" column="planet_Node" type="string"/>
+      <property name="planetName" column="planet_Name" type="string"/>
+   </class>
+</hibernate-mapping>

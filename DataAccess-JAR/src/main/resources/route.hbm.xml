@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="co.discovery.assignment.entity.helper.RoutePojo" table="ROUTE">
+      <meta attribute="class-description">
+         This class contains the route detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="planet_origin" column="planet_origin" type="string"/>
+      <property name="planet_destination" column="planet_destination" type="string"/>
+      <property name="distance" column="distance" type="double"/>
+   </class>
+</hibernate-mapping>

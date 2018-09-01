@@ -1,0 +1,25 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://planetsconcrete.com/soap" targetNamespace="http://planetsconcrete.com/soap"
+	elementFormDefault="qualified">
+	<xs:element name="findShortestPathRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="originPlanetName" type="xs:string" />
+				<xs:element name="destPlanetName" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="findShortestPathResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="path" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	 <xs:complexType name="planet">
+		<xs:sequence>
+			<xs:element name="planetNode" type="xs:string" />
+			<xs:element name="PlanetName" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType> 
+</xs:schema> 

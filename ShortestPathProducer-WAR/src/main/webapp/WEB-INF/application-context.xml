@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<bean id="planetUtility" class="com.planetsconcrete.PlanetUtility">
+		<property name="nodeEdgeService" ref="nodeEdgeService"></property>
+	</bean>
+
+
+	<bean id="nodeEdgeService"
+		class="co.discovery.assignment.planetservice.NodeEdgeSeviceImpl">
+		<property name="nodeEdgeDao" ref="nodeEdgeDao"></property>
+	</bean>
+
+
+	<bean id="nodeEdgeDao" class="za.co.discovery.assignment.dao.NodeEdgeDaoImpl">
+		<!-- <property name="template" ref="template"></property> -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<!-- <bean id="template" class="org.springframework.orm.hibernate3.HibernateTemplate"> 
+		<property name="sessionFactory" ref="sessionFactory"></property> </bean> -->
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+
+		<property name="mappingResources">
+			<list>
+				<value>planet.hbm.xml</value>
+				<value>route.hbm.xml</value>
+			</list>
+		</property>
+
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.DerbyDialect</prop>
+				<prop key="hibernate.default_schema">ENTITY</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+
+			</props>
+		</property>
+
+	</bean>
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver"></property>
+		<property name="url" value="jdbc:derby:C:\Users\bm47021\MyDB"></property>
+		<property name="username" value="admin"></property>
+		<property name="password" value="admin"></property>
+	</bean>
+
+	<task:annotation-driven />
+	<sws:annotation-driven />
+	<!-- <tx:annotation-driven proxy-target-class="true" /> -->
+	<bean class="org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection"
+		id="testSchemas">
+		<property name="inline" value="true" />
+		<property name="xsds">
+			<list>
+				<value>schema/planets.xsd</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="PathwsdlService"
+		class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+		<property name="faultSuffix" value="FaultMessage" />
+		<property name="locationUri" value="/endpoints" />
+		<property name="portTypeName" value="GetShortestPathPort" />
+		<property name="requestSuffix" value="Request" />
+		<property name="responseSuffix" value="Response" />
+		<property name="schemaCollection" ref="testSchemas" />
+		<property name="targetNamespace" value="http://planetsconcrete.com/soap" />
+	</bean>
+	<bean
+		class="org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter">
+		<constructor-arg ref="marshaller" />
+	</bean>
+
+	<bean
+		class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping">
+		<property name="interceptors">
+			<list>
+				<ref local="validatingInterceptor" />
+			</list>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver" />
+	<bean id="validatingInterceptor"
+		class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+		<property name="schema" value="schema/planets.xsd" />
+		<property name="validateRequest" value="true" />
+		<property name="validateResponse" value="true" />
+	</bean>
+
+	<bean id="shortestDistanceEndpoint" class="com.planetsconcrete.PlanetEndpoint">
+		<property name="planetUtility" ref="planetUtility"></property>
+	</bean>
+
+	<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.planetsconcrete.soap" />
+	</bean>
+
+
+
+
+
+
+
+
+
+</beans>
